@@ -1,0 +1,3 @@
+reference
+https://paperswithcode.com/paper/cryptocurrency-price-prediction-using-twitter
+https://paperswithcode.com/paper/support-for-stock-trend-prediction-using
