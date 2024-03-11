@@ -47,7 +47,7 @@ pic: duy
 
 \subsection{Architecture Descriptions}
 deadline: 2024-03-16 19h \\
-pic: vuong
+pic: vuong 
 nho Vuong hoac Phuc ve giup cai Architecture
 \begin{itemize}
 \item doan 1
@@ -60,9 +60,18 @@ a+b=\gamma\label{eq}
 
 
 \section{EXPERIMENT AND RESULTS ANALYSIS}
-duy viet 
-deadline: 2024-03-16
+To facilitate objective comparison with existing related work. We focus on utilizing a window of n days to forecast the highest price on day (n+1). To evaluate the models' capabilities in capturing both long-term and short-term dependencies in the stock price data, we conducted experiments by varying the value of n, which is commonly referred to as the "window of days." This methodological approach enables us to directly compare our findings with those of previous studies, ensuring the validity and reliability of our results.
 \subsection{Metrics}
+For measuring loss, we utilized the Mean Squared Error (MSE) loss function, given that predicting the highest price on day (n+1) is a regression-based task. MSE is calculated by computing the average of the squared differences between each data point's corresponding ground truth label and the model's predicted output. The mathematical formula for MSE loss is presented in Equation \ref{eq:mse} below:
+\begin{equation}
+\label{eq:mse}
+\text{MSE loss} = \frac{1}{N} \sum_{i=1}^{N} (\hat{y_i} - y_i)^2
+\end{equation}
+Mean Absolute Percentage Error (MAPE) serves as a crucial metric for evaluating the precision of forecasting methodologies. It entails calculating the average of the absolute percentage errors associated with each data point within a dataset. This metric quantifies the accuracy of forecasted values in relation to their corresponding actual values. MAPE proves particularly valuable when analyzing extensive datasets and necessitates the utilization of non-zero values within the dataset.
+\begin{equation}
+\label{eq:mape}
+\text{MAPE} = \frac{1}{\text{N}} \sum_{i=1}^{\text{N}} \left( \frac{\left| {y}_i - \hat{y_i} \right|}{\left| {y}_i \right|} \right) \times 100
+\end{equation}
 \subsection{Best Run Parameters}
 \subsection{Best Model Parameters}
 deadline: 2024-03-16 19h \\
