@@ -35,8 +35,7 @@ deadline: t7 2024-03-17 sau khi mn nop \\
 pic: duy
 
 \section{RELATED WORKS}
-deadline: 2024-03-16 19h \\
-pic: hien 
+viet code o day
 
 
 \section{PROPOSED METHOD}
@@ -67,16 +66,28 @@ For measuring loss, we utilized the Mean Squared Error (MSE) loss function, give
 \label{eq:mse}
 \text{MSE loss} = \frac{1}{N} \sum_{i=1}^{N} (\hat{y_i} - y_i)^2
 \end{equation}
-Mean Absolute Percentage Error (MAPE) serves as a crucial metric for evaluating the precision of forecasting methodologies. It entails calculating the average of the absolute percentage errors associated with each data point within a dataset. This metric quantifies the accuracy of forecasted values in relation to their corresponding actual values. MAPE proves particularly valuable when analyzing extensive datasets and necessitates the utilization of non-zero values within the dataset.
+Mean Absolute Percentage Error (MAPE) serves as a crucial metric for evaluating the precision of forecasting methodologies. It entails calculating the average of the absolute percentage errors associated with each data point within a dataset. This metric quantifies the accuracy of forecasted values in relation to their corresponding actual values. MAPE proves particularly valuable when analyzing extensive datasets and necessitates the utilization of non-zero values within the dataset. 
 \begin{equation}
 \label{eq:mape}
 \text{MAPE} = \frac{1}{\text{N}} \sum_{i=1}^{\text{N}} \left( \frac{\left| {y}_i - \hat{y_i} \right|}{\left| {y}_i \right|} \right) \times 100
 \end{equation}
 \subsection{Best Run Parameters}
+In all our tests, the model was trained for 100 epochs. We opted for the Adam optimizer throughout due to its well-established reputation for achieving rapid convergence. Lastly, a learning rate of 0.0001 demonstrably gave the best convergence results across all trials.
 \subsection{Best Model Parameters}
-deadline: 2024-03-16 19h \\
-pic: duy 
+For our Stock Attention model, we utilized a combination of LSTM and attention mechanisms to effectively capture temporal dependencies in the data while focusing on relevant information. The model architecture consisted of 64 LSTM layers stacked on top of each other. To enhance generalization and prevent overfitting, we incorporated a dropout value of 0.1. Dropout randomly drops a fraction of input units during training, which encourages the model to learn more robust features and reduces reliance on specific inputs. This configuration allowed for a comprehensive understanding of the sequential patterns present in the stock data.
+
+We leveraged the power of attention mechanisms by employing 128 attention heads. Each attention head has its own set of weights, enabling the model to focus on different aspects of the input sequence simultaneously. This multi-head attention mechanism provides the model with a richer representation of contextual information, leading to more informed predictions.
+
+Additionally, Dense layers with 32 neurons each follow the attention layer. And finally utilize Leaky ReLU activation functions with a chosen alpha value of 0.4 for enhanced nonlinear transformation capabilities.
+
+By combining LSTM layers with attention mechanisms and carefully tuning hyperparameters such as the number of layers, hidden dimensions, dropout rate, and attention heads, our Stock Attention model achieved superior performance across various time windows, demonstrating its efficacy in capturing and leveraging temporal dynamics in stock data for accurate forecasting.
 \subsection{Experimental Results}
+As highlighted in the Related Works section, Paper A presents a baseline LSTM model for forecasting with a time window of 30 days. We commenced our investigation by replicating the architecture outlined in Paper A, utilizing a feature set encompassing solely Twitter interactions and price data (totaling 7 features). This initial configuration yielded a noteworthy improvement, achieving a Mean Absolute Percentage Error (MAPE) 4.5\% higher compared to the baseline established by the previous research.
+
+We then exploratory incorporated an additional feature – whale tracking data – into the model. While this inclusion did not lead to a further reduction in MAPE, the performance remained on par with the previous baseline ($\sim3.6\% MAPE).
+
+Undeterred, we explored the potential of a novel architecture – the Stock Attention model. This innovative approach yielded exceptional results, surpassing all prior research by achieving a remarkable MAPE of 2.1\% lower than the established benchmark.
+
 \subsection{Comparison price prediction between LSTM and Transformer}
 so sanh
 
