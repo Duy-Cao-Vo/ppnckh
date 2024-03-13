@@ -78,36 +78,42 @@ For our Stock Attention model, we utilized a combination of LSTM and attention m
 
 We leveraged the power of attention mechanisms by employing 128 attention heads. Each attention head has its own set of weights, enabling the model to focus on different aspects of the input sequence simultaneously. This multi-head attention mechanism provides the model with a richer representation of contextual information, leading to more informed predictions.
 
-Additionally, Dense layers with 32 neurons each follow the attention layer. And finally utilize Leaky ReLU activation functions with a chosen alpha value of 0.4 for enhanced nonlinear transformation capabilities.
+Additionally, Dense layers with 64 neurons each follow the attention layer. And finally utilize Leaky ReLU activation functions with a chosen alpha value of 0.4 for enhanced nonlinear transformation capabilities.
+
+We added a batch size of 16 to the training process. This means that during each training iteration, 16 samples from the dataset were processed simultaneously. Utilizing batch training helps improve computational efficiency and allows for parallel processing, which can speed up training time.
 
 By combining LSTM layers with attention mechanisms and carefully tuning hyperparameters such as the number of layers, hidden dimensions, dropout rate, and attention heads, our Stock Attention model achieved superior performance across various time windows, demonstrating its efficacy in capturing and leveraging temporal dynamics in stock data for accurate forecasting.
 \subsection{Experimental Results}
 As highlighted in the Related Works section, Paper A presents a baseline LSTM model for forecasting with a time window of 30 days. We commenced our investigation by replicating the architecture outlined in Paper A, utilizing a feature set encompassing solely Twitter interactions and price data (totaling 7 features). This initial configuration yielded a noteworthy improvement, achieving a Mean Absolute Percentage Error (MAPE) 4.5\% higher compared to the baseline established by the previous research.
 
-We then exploratory incorporated an additional feature – whale tracking data – into the model. While this inclusion did not lead to a further reduction in MAPE, the performance remained on par with the previous baseline ($\sim3.6\% MAPE).
+We then exploratory incorporated an additional feature – whale tracking data – into the model. While this inclusion did not lead to a further reduction in MAPE, the performance remained on par with the previous baseline ($\sim3.6\%$ MAPE).
 
 Undeterred, we explored the potential of a novel architecture – the Stock Attention model. This innovative approach yielded exceptional results, surpassing all prior research by achieving a remarkable MAPE of 2.1\% lower than the established benchmark.
 
 \subsection{Comparison price prediction between LSTM and Transformer}
-so sanh
-
-
 \begin{table}[htbp]
-\caption{Table Type Styles}
+\caption{Comparison between LSTM and Stock Attention}
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{cccccc}
 \hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
+\multicolumn{2}{c}{Model} & \multicolumn{4}{c}{Metric} \\ \cline{3-6}
+\multicolumn{2}{c}{} & MSE Loss & Directional Accuracy & MAPE & \\ \hline
+LSTM  & n=4  & 1.4360 & 0.5178 & 3.63\% &  \\
+      & n=14 & 7.2680 & 0.5353 & 5.93\% &  \\
+      & n=21 & 10.140  & 0.4444 & 6.90\% &  \\ \hline
+Stock Attention & n=4  & 1.2571 & 0.5555 & \textbf{2.30\%} &  \\
+      & n=14 & 2.5452 & \textbf{0.5965} & 4.69\% &  \\
+      & n=21 & 3.6659 & \textbf{0.6326} & 5.53\% &  \\ \hline
 \end{tabular}
 \label{tab1}
 \end{center}
 \end{table}
+
+
+
+
+
+
 
 \begin{figure}[htbp]
 \centerline{\includegraphics{fig1.png}}
