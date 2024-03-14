@@ -111,17 +111,33 @@ Stock Attention & n=4  & 1.2571 & 0.5555 & \textbf{2.30\%} &  \\
 
 
 
+To determine the most suitable model for cryptocurrency price prediction, we conducted a thorough analysis comparing the performance of the Stock Transformer and LSTM models. Our study employed three key metrics: Direction Accuracy, Mean Squared Error (MSE), and Mean Absolute Percentage Error (MAPE). Notably, this research represents an example of effort in exploring Transformer-based forecasting methodologies tailored for both short-term and long-term prediction horizons.
+
+In our experimentation, we achieved a directional accuracy of 55.6\%, slightly lower than the findings reported in previous works such as Paper A. However, our model showcased a substantially enhanced MAPE of only 2.3\%, significantly lower than the baseline of 3.6\% reported in research B, thereby indicating its effectiveness in precisely forecasting cryptocurrency price movements.
+
+Furthermore, our investigation uncovered intriguing insights regarding model performance over longer time windows, particularly with a lag period of 21 days. Here, we observed a notable discrepancy between the Stock Transformer and LSTM models, with the former outperforming the latter by 18\%. This disparity underscores the potential degradation in LSTM's predictive capabilities over extended forecasting horizons.
+
+Overall, our findings suggest that while LSTM models may demonstrate competitive performance in certain scenarios, the Stock Transformer exhibits promising potential, particularly for long-term cryptocurrency price prediction tasks. This study contributes valuable insights to the burgeoning field of Transformer-based forecasting techniques and underscores the importance of considering both short-term and long-term performance metrics in model evaluation.
+
+
+
 
 
 
 
 \begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
-\caption{Example of a figure caption.}
-\label{fig}
+\begin{center}
+
+
+\centering
+\includegraphics[width=0.5\textwidth]{mad.png} % Adjust width as needed
+\caption{Directional Accuracy Comparison}
+\label{fig:da_comparison}
+
+
+\end{center}
 \end{figure}
 
-Figure Labels: image description
 
 
 \section{CONCLUSION}
