@@ -45,16 +45,41 @@ pic: hien
 deadline: 2024-03-16 19h \\
 pic: duy 
 
+
+\subsection{Dataset Description and Analysis}
+% \label{AA}
+deadline: 2024-03-16 19h \\
+pic: duy 
+
 \subsection{Architecture Descriptions}
 Our Stock Attention model employs a synergistic combination of LSTM and attention mechanisms. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
+\\
 \subsubsection{Data Collection and data Preprocessing}
+\\
+
 In this paper, we address the problem of cryptocurrency price prediction by utilizing three main data sources. First, we consider Bitcoin price data. We collect a total of 2340 consecutive days of Bitcoin price changes from August 2017 to January 2024. Bitcoin price has always served as a benchmark and exerts a significant influence on the cryptocurrency market. Next, we incorporate features extracted from social media platform Twitter. These features include conversation volume, views, likes, and follows. Finally, a key differentiator of our Stock Attention model lies in the incorporation of features derived from whale behavior on transactions exceeding 100 Bitcoin. Large transaction volumes from whale wallets consistently lead to Bitcoin price fluctuations and consequently, impact the entire cryptocurrency market. 
- TESTTTTTTTTTTTTTTTTTTT
-\begin{itemize}
-\item doan 1
-\item doan 2
-\item doan 3
-\end{itemize}
+For the quality issues of the dataset, we employed a proposed data augmentation method. Specifically, for the trading date feature, we converted timestamps and features from different sources into a unified data format using linear scaling normalization. This is a valuable data preprocessing step for machine learning models, as it offers several advantages: Improved model convergence, linear scaling ensures that all features are on the same scale, potentially leading to faster convergence during the training process. Enhanced accuracy to outliers, by normalizing the data, the influence of extreme values is reduced, making the model more robust and reliable. Facilitated model interpretability, when features are on the same scale, it becomes easier to understand the relative importance of each feature and how they contribute to the model's predictions.
+The basic idea of calculating a linear scale is to transform for each attribute value (x) in your data according to the following formula:
+
+\begin{equation}
+x_\text{scaled} = \frac{x - \min(X)}{\max(X) - \min(X)}
+\end{equation}
+
+Where x\_\text{scaled} is the scaled value property, x is the beginning of the specific value histogram, min(X) is the smallest value of all value properties in X, and max(X) is value Maximum of all specified values in X. This formula subtracts the minimum value from each feature value and then divides the result by the difference between the maximum value and the minimum value. This ensures that all scaled feature values will lie within the range of 0 to 1.
+
+\subsubsection{Long Short-Term Memory (LSTM) Baseline}
+\\
+
+Phuc
+
+\subsubsection{Attention Mechanism}
+\\
+
+Phuc
+
+\begin{equation}
+a+b=\gamma\label{eq}
+\end{equation}
 \begin{equation}
 a+b=\gamma\label{eq}
 \end{equation}
