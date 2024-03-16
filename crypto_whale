@@ -71,18 +71,25 @@ Where x\_\text{scaled} is the scaled value property, x is the beginning of the s
 \subsubsection{RNN}
 \
 
-The recurrent neural network (RNN) proposed in 1986 [1], represents a dynamic system with recursive properties. Two key characteristics of RNNs include computing the current state as a synthesis of past states and parameter sharing. In general, the system can be described by the formula:
+The recurrent neural network (RNN) proposed in 1986 \cite{backpropagating}, represents a dynamic system with recursive properties. Two key characteristics of RNNs include computing the current state as a synthesis of past states and parameter sharing. In general, the system can be described by the formula:
 
 \begin{equation}
-\( h_t = f_\theta(h_{t-1}, x_t) \)
+h_t = f_\theta(h_{t-1}, x_t)
 \end{equation}
 
 Considering the state \( h_t \) as a function dependent on \( f_0 \), the previous state \( h_{t-1} \), and a current input signal \( x_t \), the recurrent neural network (RNN) typically accepts a sequence of input signals \( x_t \) and returns results suitable for classification or regression tasks. Suppose the input, output, and state at time slot \( t \) are denoted by \( x_t \in \mathbb{R}^d \), \( y_t \in \mathbb{R}^q \), and \( h_t \in \mathbb{R}^p \), respectively. The computation of an RNN is specified as follows.
+
 \begin{equation}
-\[ i_t = W h_{t-1} + U x_t + b_i \]
-\[ h_t = \text{tanh}(i_t) \]
-\[ = \text{tanh}(W h_{t-1} + U x_t + b_i) \]
-\[ y_t = V h_t + b_y \]
+i_t = W h_{t-1} + U x_t + b_i \
+\end{equation}
+\begin{equation}
+h_t = \text{tanh}(i_t) 
+\end{equation}
+\begin{equation}
+= \text{tanh}(W h_{t-1} + U x_t + b_i)
+\end{equation}
+\begin{equation}
+y_t = V h_t + b_y 
 \end{equation}
 Recurrent Neural Networks (RNNs) can be considered deep learning networks when handling temporally extended signals, as illustrated in the figure below [2].
 \begin{figure}[htbp]
@@ -95,11 +102,12 @@ Recurrent Neural Networks (RNNs) can be considered deep learning networks when h
 \end{center}
 \end{figure}
 
-Hence, the output results often comprise a composition of sequential nonlinear operations, leading to the issue of vanishing or exploding gradients in recurrent neural networks, hindering the capture of long-term dependencies. Various efforts have been made to address this challenge, notable examples include the Close-to-identity Weight Matrix [2], Long Delays [3], Leaky Units [4][6], and Echo State Networks [4][5].
+Hence, the output results often comprise a composition of sequential nonlinear operations, leading to the issue of vanishing or exploding gradients in recurrent neural networks, hindering the capture of long-term dependencies. Various efforts have been made to address this challenge, notable examples include the Close-to-identity Weight Matrix\citi{Eigenvalue}, Long Delays\citi{longdelay}, Leaky Units \citi{statenetwork}\citi{kernel}, and Echo State Networks \citi{statenetwork}\citi{trainingrecurrent}.
 
 \subsubsection{Long Short-Term Memory (LSTM) Baseline}
 \
-The Long Short-Term Memory (LSTM) network, introduced by Hochreiter & Schmidhuber [7][8], represents a significant advancement over traditional RNNs. It autonomously determines when to utilize long-term and short-term signals, eliminating the need for manual adjustments to the RNN cell's internal architecture. An LSTM cell comprises multiple gates for signal processing, which can be depicted as illustrated in the figure below.
+
+The Long Short-Term Memory (LSTM) network, introduced by Hochreiter & Schmidhuber \citi{lstm}citi{lstm2}, represents a significant advancement over traditional RNNs. It autonomously determines when to utilize long-term and short-term signals, eliminating the need for manual adjustments to the RNN cell's internal architecture. An LSTM cell comprises multiple gates for signal processing, which can be depicted as illustrated in the figure below.
 \begin{figure}[htbp]
 \begin{center}
 
@@ -110,61 +118,70 @@ The Long Short-Term Memory (LSTM) network, introduced by Hochreiter & Schmidhube
 
 \end{center}
 \end{figure}
-The input gate [7][8] accepts the current time slot input \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( i_t \in [0, 1]^p \):
+The input gate \citi{lstm}citi{lstm2} accepts the current time slot input \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( i_t \in [0, 1]^p \):
 
-\[ i_t = \sigma(W_i h_{t-1} + U_i x_t + (p_i \odot c_{t-1}) + b_i) \]
+\begin{equation}
+i_t = \sigma(W_i h_{t-1} + U_i x_t + (p_i \odot c_{t-1}) + b_i)
+\end{equation}
 
-where \( W_i \in \mathbb{R}^{p \times p} \), \( U_i \in \mathbb{R}^{p \times d} \), and the bias \( b_i \in \mathbb{R}^p \) are the learnable weights for the input gate. The symbol \( \odot \) denotes the Hadamard (element-wise) product, \( c_{t-1} \in \mathbb{R}^p \) is the final memory of the previous time slot, and \( p_i \in \mathbb{R}^p \) is the learnable peephole weight [9] letting a possible leak of information from the previous final memory.
+where \( W_i \in \mathbb{R}^{p \times p} \), \( U_i \in \mathbb{R}^{p \times d} \), and the bias \( b_i \in \mathbb{R}^p \) are the learnable weights for the input gate. The symbol \( \odot \) denotes the Hadamard (element-wise) product, \( c_{t-1} \in \mathbb{R}^p \) is the final memory of the previous time slot, and \( p_i \in \mathbb{R}^p \) is the learnable peephole weight \citi{lstm3} letting a possible leak of information from the previous final memory.
 
-The forget gate [9] takes the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( f_t \in [0, 1]^p \):
+The forget gate \citi{lstm3} takes the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( f_t \in [0, 1]^p \):
 
-\[ f_t = \sigma(W_f h_{t-1} + U_f x_t + (p_f \odot c_{t-1}) + b_f) \]
+\begin{equation}
+f_t = \sigma(W_f h_{t-1} + U_f x_t + (p_f \odot c_{t-1}) + b_f)
+\end{equation}
 
 where \( W_f \in \mathbb{R}^{p \times p} \), \( U_f \in \mathbb{R}^{p \times d} \), and the bias \( b_f \in \mathbb{R}^p \) are the learnable weights for the forget gate. Additionally, \( p_f \in \mathbb{R}^p \) represents the learnable peephole weight.
 
 The output gate accepts the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( o_t \in [0, 1]^p \):
-
-\[ o_t = \sigma(W_o h_{t-1} + U_o x_t + (p_o \odot c_t) + b_o) \]
+\begin{equation}
+o_t = \sigma(W_o h_{t-1} + U_o x_t + (p_o \odot c_t) + b_o)
+\end{equation}
 
 Here, \( W_o \in \mathbb{R}^{p \times p} \), \( U_o \in \mathbb{R}^{p \times d} \), and the bias \( b_o \in \mathbb{R}^p \) are the learnable weights for the output gate. Additionally, \( p_o \in \mathbb{R}^p \) denotes the learnable peephole weight.
 
 The new memory cell, which captures the current input's new information, operates based on the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), yielding the signal \( e_{ct} \in [-1, 1]^p \). This gate integrates the influence of both the input and the previous hidden state. Its formulation is as follows:
 
-\[ e_{ct} = \text{tanh}(W_c h_{t-1} + U_c x_t + b_c) \]
+\begin{equation}
+e_{ct} = \text{tanh}(W_c h_{t-1} + U_c x_t + b_c)
+\end{equation}
 
 Here, \( W_c \in \mathbb{R}^{p \times p} \), \( U_c \in \mathbb{R}^{p \times d} \), and \( b_c \) represent the learnable weights for the new memory cell.
 
 The final memory \( c_t \in \mathbb{R}^p \) is computed as follows:
-
-\[ c_t = (f_t \odot c_{t-1}) + (i_t \odot e_{ct}) \]
+\begin{equation}
+c_t = (f_t \odot c_{t-1}) + (i_t \odot e_{ct})
+\end{equation}
 
 Here, \( c_{t-1} \in \mathbb{R}^p \) represents the final memory from the previous time slot.
 
 The hidden state \( h_t \in [-1, 1]^p \) can be computed using the final memory \( c_t \) and the output gate \( o_t \) as follows:
-
-\[ h_t = o_t \odot \text{tanh}(c_t) \]
+\begin{equation}
+h_t = o_t \odot \text{tanh}(c_t)
+\end{equation}
 
 The output \( y_t \in \mathbb{R}^q \) is given by:
-
-\[ y_t = V h_t + b_y \]
+\begin{equation}
+y_t = V h_t + b_y
+\end{equation}
 
 where \( V \in \mathbb{R}^{q \times p} \) and the bias \( b_y \in \mathbb{R}^q \) are the learnable weights for the output.
 
-The LSTM can also be combined with the Bidirectional architecture [10], where each Bidirectional LSTM layer consists of two hidden layers receiving the same input and output signals. The key difference lies in their processing of data in opposite directions, making them highly suitable for tasks that benefit from information from both the past and the future (such as part-of-speech tagging). However, applying Bidirectional and LSTM is not appropriate for tasks with an online setting, as predicting the current result requires knowledge of future information.
-
-Furthermore, based on prior research [11][12][13], the dropout technique has been applied to connections feeding from the hidden layer to the output layer of LSTM cells, aiding in enhancing the performance of RNN models. These studies also indicate that employing dropout with a large number of recurrent connections can lead to model instabilities, leaving them without regularization.
+The LSTM can also be combined with the Bidirectional architecture \cite{NN}, where each Bidirectional LSTM layer consists of two hidden layers receiving the same input and output signals. The key difference lies in their processing of data in opposite directions, making them highly suitable for tasks that benefit from information from both the past and the future (such as part-of-speech tagging). However, applying Bidirectional and LSTM is not appropriate for tasks with an online setting, as predicting the current result requires knowledge of future information.
+\
+Furthermore, based on prior research \citi{NL}\citi{recurrentnetworks}\citi{recurrentnetworks2}, the dropout technique has been applied to connections feeding from the hidden layer to the output layer of LSTM cells, aiding in enhancing the performance of RNN models. These studies also indicate that employing dropout with a large number of recurrent connections can lead to model instabilities, leaving them without regularization.
 
 
 \subsubsection{Attention Mechanism}
 \
-
-The Attention mechanism [14] addresses the vanishing gradient problem inherent in traditional RNN and LSTM models when handling long sequences of information . This is achieved by assigning weights to each data point \( d_t \). In practice, this is performed automatically (referred to as self-attention) through matrix multiplication operations between matrix X and matrices Q, K, V.
-
-\[ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V \]
-
+The Attention mechanism\citi{attention} addresses the vanishing gradient problem inherent in traditional RNN and LSTM models when handling long sequences of information . This is achieved by assigning weights to each data point \( d_t \). In practice, this is performed automatically (referred to as self-attention) through matrix multiplication operations between matrix X and matrices Q, K, V.
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
 Here, \( Q \), \( K \), and \( V \) represent the query, key, and value matrices, respectively. \( d_k \) denotes the dimensionality of the key vectors. The softmax function is applied row-wise, and the division by \( \sqrt{d_k} \) is a scaling factor.
-
-After the data has been processed through the LSTM network, the output is passed through an attention layer before proceeding to two dense layers. Stacking LSTM onto this attention layer is analogous to findings from the previous research [15] and has yielded positive results.
+\
+After the data has been processed through the LSTM network, the output is passed through an attention layer before proceeding to two dense layers. Stacking LSTM onto this attention layer is analogous to findings from the previous research\citi{attention2} and has yielded positive results.
 
 
 % \begin{figure}[htbp]
