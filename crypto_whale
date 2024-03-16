@@ -40,13 +40,14 @@ viet code o day
 
 \section{PROPOSED METHOD}
 \subsection{Dataset Description and Analysis}
-% \label{AA}
-deadline: 2024-03-16 19h \\
-pic: duy 
+The dataset comprises three distinct sources of information. The first source includes historical Bitcoin price data, sourced from the Binance API. This dataset encompasses four key attributes: open, high, low, and close prices. The second source includes Twitter posts associated with Bitcoin, procured via the Tweepy library in Python 3. These posts were obtained through the Twitter Stream API, granting access to publicly available tweets from January 1, 2018, to January 21, 2024. Briefly, the dataset encompasses 79,145 tweets and 5,343,843 retweets. We retained the entirety of the data without preprocessing to maximize sample size. This dataset comprises 16 columns, including information such as date, hashtags, and engagement metrics like view count, reply count, retweet count, and like count. For our study, we focused solely on features relevant to our research, namely conversation ID, view count, reply count, retweet count, followers count, and like count. The third data source entails Whale Tracking for BTC Large Transactions. We obtained this information through TokenView.io's API, capturing data on transactions involving over 100 and 1000 bitcoins daily. This dataset provides crucial insights into large-scale Bitcoin transactions, thereby enriching our analytical framework.
+
+Con no 1 table cho de hinh dung
+
 
 \subsection{Architecture Descriptions}
 deadline: 2024-03-16 19h \\
-pic: vuong 
+pic: vuong cxcdasdasdsacscx
 nho Vuong hoac Phuc ve giup cai Architecture
 \begin{itemize}
 \item doan 1
