@@ -36,8 +36,109 @@ pic: duy
 
 \section{RELATED WORKS}
 deadline: 2024-03-16 19h \\
-pic: hien 
+pic: hien
+\subsection{LSTM}
+There are many RNN-based stock prediction methods that is used to predict stock trend
+by using technical data or sentiment data or a combination of both. However,in this paper,
+we focus on LSTM.
 
+Firstly, LSTM (Long Short-Term Memory)[8] has long been used as an alternative to basic
+(RNN) Recurrent Neural Networks for time series prediction tasks with the main issue
+ is that RNNs can theoretically store recent information but existing learning algorithms
+  struggle with long time lags between inputs and desired outputs, these algorithms
+  are slow or impractical, offering no clear benefit over simpler networks.
+
+ LSTM is a new RNN architecture designed to address the vanishing gradient problem
+ by introducing special units with "constant error carousels" that allow error to flow through the network for extended periods so then, it can learn complex patterns even with noisy data and long time lags (over 1000 steps). These units are controlled by gates that regulate information flow. The forget gate decides what information is remembered for
+future predictions, the input gate determines the importance of
+the input, and the output gate uses information passed through
+the previous two gates to output the next hidden state of the
+model.
+
+The calculation is as follows:
+
+(1) Input the output value of the previous unit and the input value of the current time into the
+forgetting gate, and decide which information is allowed to be retained and which is abandoned after
+calculation. Such as the following formula:
+\begin{align}
+    {f_t} = {\sigma}(W_t \cdot [h_t, x_t] + b_f) && (1)
+\end{align}
+
+where $f_t$ indicates that the output ranges from 0 to 1, 0 indicates that the information is abandoned,
+1 indicates that the information is retained, $h_{t-1}$ represents the output of the previous unit,
+$x_t$ represents the input data at the current time, $W_f$ represents the weight of the forgetting gate, and $b_f$ represents the deviation of the forgetting gate.
+(2)Then decide what new information can be retained. There are two parts here. The first part is
+the sigmoid layer, also known as the input gate, which determines which newly entered information
+can be updated. The second part is that the tanh layer is designed to generate new information, where
+a new vector of candidate values is created. The formula is as follows:
+\begin{align}
+i_t &= \sigma(W_i \cdot [h_{t-1}, x_i] + b_i)
+C_t &= \sigma(W_c \cdot [h_{t-1}, x_t] + b_c)
+\end{align}
+where $i_t$ is a control signal that ranges from 0 to 1, $w_i$ represents the weight of the input gate and
+$b_i$ represents the deviation of the input gate, $W_c$ represents the weight of the candidate input gate and
+$b_f$ represents the deviation of the candidate input gate.
+
+(3) Renew the state of old cells:
+\begin{align}
+    C_t = f_t \cdot C_{t-1} + i_t \cdot \widetilde{C_t}
+\end{align}
+
+where the old state is multiplied by $f_t$ to
+determine the discarded information, and $i_t$ ∗ $C_t$ is the new candidate value, which changes with the updated state.
+
+(4) Determine the output value. The sigmoid layer determines which cell morphology is exported,
+and then it is processed by tanh layer and exported. The formula is shown below:
+
+\begin{align}
+    o_t = \sigma(W_o \cdot [h_{t-1}, x_i] + b_o)
+\end{align}
+\begin{align}
+    h_t = o_t * tanh (C_t)
+\end{align}
+
+where $W_o$ represents the weight of the output gate and $b_o$ represents the deviation of the output gate.
+
+
+\subsection{ALSTM}
+
+Jijie Wang et al. [19] introduce ALSTM (The attention mechanism into the LSTM)
+model in order to improve the prediction performance of the proposed
+model to analyse and predict Asian stock markets closing index.
+The importance of input data is fully utilized to determine the weight
+ assignment, attention layer is added in long short-term memory model
+  so as to increase the weights of effective and improve the
+  prediction accuracy of the model.
+
+  \subsection{Twitter Sentiment analysis}
+  T. Swathi et al [20] proposed  sentiment analysis of the social media data of
+  stock prices helps to predict future stock prices effectively. Because
+  the growth of the internet and social network enables the clients to express
+  their opinions and shares their views on future stock processes.
+  Besides, the LSTM model is applied to classify tweets into
+  positive and negative sentiments related to stock prices. They help investigate
+  how the tweets correlate with the nature of the stock market prices.
+
+  \subsection{Crypto Price Analysis}
+  There are many people doing research about the prediction
+of cryptocurrency. Greaves et al. [21] is a proposed technique
+using Logistic Regression and SVM and analyzed using Graph
+to predict bitcoin price. Huisu Jang et al. [22] they concern
+about a study on modeling and prediction bitcoin with
+Bayesian Neural Network and giving some knowledge about
+bitcoin. Edwin sin et al. [23] provide topic Bitcoin price
+prediction using Ensemble of Neural Networks.
+
+Chih-Hung et al. [24] are
+created new forecasting framework bitcoin price using LSTM,
+they proposed with two various LSTM models (conventional
+LSTM and LSTM with AR(2) model) with 208 records dataset,
+compared with MSE, RMSE, MAE, and MAPE. Fei Qian et
+al.
+
+The researches above proposed various method to
+prediction bitcoin. In this paper, we analyze and constructing a
+model to predict crypto using LSTM.
 
 \section{PROPOSED METHOD}
 \subsection{Dataset Description and Analysis}
