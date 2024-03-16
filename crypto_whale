@@ -46,9 +46,10 @@ deadline: 2024-03-16 19h \\
 pic: duy 
 
 \subsection{Architecture Descriptions}
-deadline: 2024-03-16 19h \\
-pic: vuong
-nho Vuong hoac Phuc ve giup cai Architecture
+Our Stock Attention model employs a synergistic combination of LSTM and attention mechanisms. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
+\subsubsection{Data Collection and data Preprocessing}
+In this paper, we address the problem of cryptocurrency price prediction by utilizing three main data sources. First, we consider Bitcoin price data. We collect a total of 2340 consecutive days of Bitcoin price changes from August 2017 to January 2024. Bitcoin price has always served as a benchmark and exerts a significant influence on the cryptocurrency market. Next, we incorporate features extracted from social media platform Twitter. These features include conversation volume, views, likes, and follows. Finally, a key differentiator of our Stock Attention model lies in the incorporation of features derived from whale behavior on transactions exceeding 100 Bitcoin. Large transaction volumes from whale wallets consistently lead to Bitcoin price fluctuations and consequently, impact the entire cryptocurrency market. 
+ TESTTTTTTTTTTTTTTTTTTT
 \begin{itemize}
 \item doan 1
 \item doan 2
