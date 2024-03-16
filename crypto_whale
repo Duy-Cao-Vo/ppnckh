@@ -45,18 +45,149 @@ pic: hien
 deadline: 2024-03-16 19h \\
 pic: duy 
 
-\subsection{Architecture Descriptions}
+
+\subsection{Dataset Description and Analysis}
+% \label{AA}
 deadline: 2024-03-16 19h \\
-pic: vuong
-nho Vuong hoac Phuc ve giup cai Architecture
-\begin{itemize}
-\item doan 1
-\item doan 2
-\item doan 3
-\end{itemize}
+pic: duy 
+
+\subsection{Architecture Descriptions}
+Our Stock Attention model employs a synergistic combination of LSTM\citi{lstm} and attention mechanisms\citi{attention}. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
+\
+\subsubsection{Data Collection and Data Preprocessing}
+\
+In this paper, we address the problem of cryptocurrency price prediction by utilizing three main data sources. First, we consider Bitcoin price data. We collect a total of 2340 consecutive days of Bitcoin price changes from August 2017 to January 2024. Bitcoin price has always served as a benchmark and exerts a significant influence on the cryptocurrency market. Next, we incorporate features extracted from social media platform Twitter. These features include conversation volume, views, likes, and follows. Finally, a key differentiator of our Stock Attention model lies in the incorporation of features derived from whale behavior on transactions exceeding 100 Bitcoin. Large transaction volumes from whale wallets consistently lead to Bitcoin price fluctuations and consequently, impact the entire cryptocurrency market. 
+\
+
+For the quality issues of the dataset, we employed a proposed data augmentation method. Specifically, for the trading date feature, we converted timestamps and features from different sources into a unified data format using linear scaling normalization\citi{linerscale}. This is a valuable data preprocessing step for machine learning models, as it offers several advantages: Improved model convergence, linear scaling ensures that all features are on the same scale, potentially leading to faster convergence during the training process. Enhanced accuracy to outliers, by normalizing the data, the influence of extreme values is reduced, making the model more robust and reliable. Facilitated model interpretability, when features are on the same scale, it becomes easier to understand the relative importance of each feature and how they contribute to the model's predictions.
+The basic idea of calculating a linear scale\citi{linerscale} is to transform for each attribute value (x) in your data according to the following formula:
+
 \begin{equation}
-a+b=\gamma\label{eq}
+x_\text{scaled} = \frac{x - \min(X)}{\max(X) - \min(X)}
 \end{equation}
+
+Where x\_\text{scaled} is the scaled value property, x is the beginning of the specific value histogram, min(X) is the smallest value of all value properties in X, and max(X) is value Maximum of all specified values in X. This formula subtracts the minimum value from each feature value and then divides the result by the difference between the maximum value and the minimum value. This ensures that all scaled feature values will lie within the range of 0 to 1.
+
+\subsubsection{Recurrent Neural Networks}
+\
+
+The recurrent neural network (RNN) proposed in 1986 \cite{backpropagating}, represents a dynamic system with recursive properties. Two key characteristics of RNNs include computing the current state as a synthesis of past states and parameter sharing. In general, the system can be described by the formula:
+
+\begin{equation}
+h_t = f_\theta(h_{t-1}, x_t)
+\end{equation}
+
+Considering the state \( h_t \) as a function dependent on \( f_0 \), the previous state \( h_{t-1} \), and a current input signal \( x_t \), the recurrent neural network (RNN) typically accepts a sequence of input signals \( x_t \) and returns results suitable for classification or regression tasks. Suppose the input, output, and state at time slot \( t \) are denoted by \( x_t \in \mathbb{R}^d \), \( y_t \in \mathbb{R}^q \), and \( h_t \in \mathbb{R}^p \), respectively. The computation of an RNN is specified as follows.
+
+\begin{equation}
+i_t = W h_{t-1} + U x_t + b_i \
+\end{equation}
+\begin{equation}
+h_t = \text{tanh}(i_t) 
+\end{equation}
+\begin{equation}
+= \text{tanh}(W h_{t-1} + U x_t + b_i)
+\end{equation}
+\begin{equation}
+y_t = V h_t + b_y 
+\end{equation}
+Recurrent Neural Networks (RNNs) can be considered deep learning networks when handling temporally extended signals, as illustrated in the figure below [2].
+\begin{figure}[htbp]
+\begin{center}
+\centering
+\includegraphics[width=0.5\textwidth]{RNN.png} % Adjust width as needed
+\caption{Recurrent Neural Networks}
+\label{fig:da_comparison}
+
+\end{center}
+\end{figure}
+
+Hence, the output results often comprise a composition of sequential nonlinear operations, leading to the issue of vanishing or exploding gradients in recurrent neural networks, hindering the capture of long-term dependencies. Various efforts have been made to address this challenge, notable examples include the Close-to-identity Weight Matrix\citi{Eigenvalue}, Long Delays\citi{longdelay}, Leaky Units \citi{statenetwork}\citi{kernel}, and Echo State Networks \citi{statenetwork}\citi{trainingrecurrent}.
+
+\subsubsection{Long Short-Term Memory (LSTM) Baseline}
+\
+
+The Long Short-Term Memory (LSTM) network, introduced by Hochreiter & Schmidhuber \citi{lstm}citi{lstm2}, represents a significant advancement over traditional RNNs. It autonomously determines when to utilize long-term and short-term signals, eliminating the need for manual adjustments to the RNN cell's internal architecture. An LSTM cell comprises multiple gates for signal processing, which can be depicted as illustrated in the figure below.
+\begin{figure}[htbp]
+\begin{center}
+
+\centering
+\includegraphics[width=0.5\textwidth]{LSTM.png} % Adjust width as needed
+\caption{The Long Short-Term Memory Cell}
+\label{fig:da_comparison}
+
+\end{center}
+\end{figure}
+The input gate \citi{lstm}citi{lstm2} accepts the current time slot input \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( i_t \in [0, 1]^p \):
+
+\begin{equation}
+i_t = \sigma(W_i h_{t-1} + U_i x_t + (p_i \odot c_{t-1}) + b_i)
+\end{equation}
+
+where \( W_i \in \mathbb{R}^{p \times p} \), \( U_i \in \mathbb{R}^{p \times d} \), and the bias \( b_i \in \mathbb{R}^p \) are the learnable weights for the input gate. The symbol \( \odot \) denotes the Hadamard (element-wise) product, \( c_{t-1} \in \mathbb{R}^p \) is the final memory of the previous time slot, and \( p_i \in \mathbb{R}^p \) is the learnable peephole weight \citi{lstm3} letting a possible leak of information from the previous final memory.
+
+The forget gate \citi{lstm3} takes the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( f_t \in [0, 1]^p \):
+
+\begin{equation}
+f_t = \sigma(W_f h_{t-1} + U_f x_t + (p_f \odot c_{t-1}) + b_f)
+\end{equation}
+
+where \( W_f \in \mathbb{R}^{p \times p} \), \( U_f \in \mathbb{R}^{p \times d} \), and the bias \( b_f \in \mathbb{R}^p \) are the learnable weights for the forget gate. Additionally, \( p_f \in \mathbb{R}^p \) represents the learnable peephole weight.
+
+The output gate accepts the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( o_t \in [0, 1]^p \):
+\begin{equation}
+o_t = \sigma(W_o h_{t-1} + U_o x_t + (p_o \odot c_t) + b_o)
+\end{equation}
+
+Here, \( W_o \in \mathbb{R}^{p \times p} \), \( U_o \in \mathbb{R}^{p \times d} \), and the bias \( b_o \in \mathbb{R}^p \) are the learnable weights for the output gate. Additionally, \( p_o \in \mathbb{R}^p \) denotes the learnable peephole weight.
+
+The new memory cell, which captures the current input's new information, operates based on the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), yielding the signal \( e_{ct} \in [-1, 1]^p \). This gate integrates the influence of both the input and the previous hidden state. Its formulation is as follows:
+
+\begin{equation}
+e_{ct} = \text{tanh}(W_c h_{t-1} + U_c x_t + b_c)
+\end{equation}
+
+Here, \( W_c \in \mathbb{R}^{p \times p} \), \( U_c \in \mathbb{R}^{p \times d} \), and \( b_c \) represent the learnable weights for the new memory cell.
+
+The final memory \( c_t \in \mathbb{R}^p \) is computed as follows:
+\begin{equation}
+c_t = (f_t \odot c_{t-1}) + (i_t \odot e_{ct})
+\end{equation}
+
+Here, \( c_{t-1} \in \mathbb{R}^p \) represents the final memory from the previous time slot.
+
+The hidden state \( h_t \in [-1, 1]^p \) can be computed using the final memory \( c_t \) and the output gate \( o_t \) as follows:
+\begin{equation}
+h_t = o_t \odot \text{tanh}(c_t)
+\end{equation}
+
+The output \( y_t \in \mathbb{R}^q \) is given by:
+\begin{equation}
+y_t = V h_t + b_y
+\end{equation}
+
+where \( V \in \mathbb{R}^{q \times p} \) and the bias \( b_y \in \mathbb{R}^q \) are the learnable weights for the output.
+
+The LSTM can also be combined with the Bidirectional architecture \cite{NN}, where each Bidirectional LSTM layer consists of two hidden layers receiving the same input and output signals. The key difference lies in their processing of data in opposite directions, making them highly suitable for tasks that benefit from information from both the past and the future (such as part-of-speech tagging). However, applying Bidirectional and LSTM is not appropriate for tasks with an online setting, as predicting the current result requires knowledge of future information.
+\
+Furthermore, based on prior research \citi{NL}\citi{recurrentnetworks}\citi{recurrentnetworks2}, the dropout technique has been applied to connections feeding from the hidden layer to the output layer of LSTM cells, aiding in enhancing the performance of RNN models. These studies also indicate that employing dropout with a large number of recurrent connections can lead to model instabilities, leaving them without regularization.
+
+
+\subsubsection{Attention Mechanism}
+\
+The Attention mechanism\citi{attention} addresses the vanishing gradient problem inherent in traditional RNN and LSTM models when handling long sequences of information . This is achieved by assigning weights to each data point \( d_t \). In practice, this is performed automatically (referred to as self-attention) through matrix multiplication operations between matrix X and matrices Q, K, V.
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+Here, \( Q \), \( K \), and \( V \) represent the query, key, and value matrices, respectively. \( d_k \) denotes the dimensionality of the key vectors. The softmax function is applied row-wise, and the division by \( \sqrt{d_k} \) is a scaling factor.
+\
+After the data has been processed through the LSTM network, the output is passed through an attention layer before proceeding to two dense layers. Stacking LSTM onto this attention layer is analogous to findings from the previous research\citi{attention2} and has yielded positive results.
+
+
+% \begin{figure}[htbp]
+% \begin{center}
+
+
 
 
 \section{EXPERIMENT AND RESULTS ANALYSIS}
@@ -104,16 +235,39 @@ deadline: 2024-03-23 duy viet mn review
 
 
 
+
 \begin{thebibliography}{00}
 \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+\bibitem{binanceapi}
+Binance API. \textit{Accessed: March 16, 2024.} Available online: \url{https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT}
+\bibitem{tokenview}
+TokenView.io API. \textit{Accessed: March 16, 2024.} Available online: \url{https://services.tokenview.io/vipapi/tx/unusual/amount/1/5}
+\bibitem{tweepy}
+Tweepy - Python library for accessing the Twitter API. \textit{Accessed: March 16, 2024.} Available online: \url{https://www.tweepy.org/}
+
+\bibitem{backpropagating} Rumelhart, David E, Hinton, Geoffrey E, and Williams, Ronald J. Learning representations by back-propagating errors. Nature, 323(6088):533–536, 1986.
+\bibitem{Eigenvalue} Ghojogh, Benyamin, Karray, Fakhri, and Crowley, Mark. Eigenvalue and generalized eigenvalue problems: Tuto- rial. arXiv preprint arXiv:1903.11240, 2019a.
+\bibitem{longdelay} Lin, Tsungnan, Horne, Bill G., Tino, Peter, and Giles, C. Lee. Learning long-term dependencies is not as difficult with narx recurrent neural networks. Advances in neural information processing systems, 1995.
+\bibitem{statenetwork} Jaeger, Herbert. Echo state network. Scholarpedia, 2(9): 2330, 2007.
+\bibitem{trainingrecurrent}  Jaeger, Herbert. Tutorial on training recurrent neural net- works, covering BPPT, RTRL, EKF and the ”echo state network” approach. 2002.
+\bibitem{kernel} Sutskever, Ilya and Hinton, Geoffrey. Temporal-kernel re- current neural networks. Neural Networks, 23(2):239– 243, 2010.
+\bibitem{lstm}  Hochreiter, Sepp and Schmidhuber, Ju ̈rgen. Long short- term memory. Neural computation, 9(8):1735–1780, 1997.
+\bibitem{lstm2}  Hochreiter, Sepp and Schmidhuber, Ju ̈rgen. Long short- term memory. Technical report, FKI-207-95, Depart- ment of Fakulta ̈t fu ̈r Informatik, Technical University of Munich, Munich, Germany, 1995.
+\bibitem{lstm3} Gers, Felix A, Schmidhuber, Ju ̈rgen, and Cummins, Fred. Learning to forget: Continual prediction with LSTM. Neural computation, 12(10):2451–2471, 2000.
+\bibitem{NN} Mike Schuster and Kuldip K. Paliwal. Bidirectional recurrent neural networks. Signal Processing, IEEE Transactions on, 45(11):2673–2681, 1997.
+\bibitem{NL} Marius Pachitariu and Maneesh Sahani. Regularization and nonlinearities for neural language models: when are they needed? arXiv preprint arXiv:1301.5650, 2013.
+\bibitem{recurrentnetworks} Justin Bayer, Christian Osendorfer, Daniela Korhammer, Nutan Chen, Sebastian Urban, and Patrickvander Smagt. On fast dropout and its applicability to recurrent networks. arXiv preprint arXiv:1311.0701, 2013.
+\bibitem{recurrentnetworks2} Vu Pham, Theodore Bluche, Christopher Kermorvant, and Jerome Louradour. Dropout improves recurrent neural networks for handwriting recognition. In ICFHR. IEEE, 2014.
+\bibitem{attention} Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin. Attention Is All You Need. arXiv:1706.03762 [cs.CL] 6 Dec 2017
+\bibitem{attention2} Sangyeon Kim, Myungjoo Kang. Financial series prediction using attention LSTM. arXiv:1902.10877, 2019
+\bibitem{alstm} Wang, J., Cui, Q., Sun, X., & et al. (2022). Asian stock markets closing index forecast based on secondary decomposition, multi-factor analysis and attention-based lstm model. Engineering Applications of Artificial Intelligence, 113, 104908. https://doi.org/10.1016/j.engappai.2022.1049082222
+\bibitem{linerscale}  Jason Brownlee. Data Preprocessing for Machine Learning
+\bibitem{sentimentanalysis}  Swathi, T., Kasiviswanath, N., & Rao, A. A. (2022). An optimal deep learning-based lstm for stock price prediction using twitter sentiment analysis. Applied Intelligence, 52(12), 13675–13688. https://doi.org/10.1007/s10489-022-03175-2
+
+
 \end{thebibliography}
 \vspace{12pt}
 
 
 \end{document}
+
