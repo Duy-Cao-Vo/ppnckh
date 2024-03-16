@@ -35,19 +35,19 @@ deadline: t7 2024-03-17 sau khi mn nop \\
 pic: duy
 
 \section{RELATED WORKS}
-deadline: 2024-03-16 19h \\
-pic: hien 
+viet code o day
 
 
 \section{PROPOSED METHOD}
 \subsection{Dataset Description and Analysis}
-% \label{AA}
-deadline: 2024-03-16 19h \\
-pic: duy 
+The dataset comprises three distinct sources of information. The first source includes historical Bitcoin price data, sourced from the Binance API. This dataset encompasses four key attributes: open, high, low, and close prices. The second source includes Twitter posts associated with Bitcoin, procured via the Tweepy library in Python 3. These posts were obtained through the Twitter Stream API, granting access to publicly available tweets from January 1, 2018, to January 21, 2024. Briefly, the dataset encompasses 79,145 tweets and 5,343,843 retweets. We retained the entirety of the data without preprocessing to maximize sample size. This dataset comprises 16 columns, including information such as date, hashtags, and engagement metrics like view count, reply count, retweet count, and like count. For our study, we focused solely on features relevant to our research, namely conversation ID, view count, reply count, retweet count, followers count, and like count. The third data source entails Whale Tracking for BTC Large Transactions. We obtained this information through TokenView.io's API, capturing data on transactions involving over 100 and 1000 bitcoins daily. This dataset provides crucial insights into large-scale Bitcoin transactions, thereby enriching our analytical framework.
+
+Con no 1 table cho de hinh dung
+
 
 \subsection{Architecture Descriptions}
 deadline: 2024-03-16 19h \\
-pic: vuong
+pic: vuong cxcdasdasdsacscx
 nho Vuong hoac Phuc ve giup cai Architecture
 \begin{itemize}
 \item doan 1
@@ -60,42 +60,85 @@ a+b=\gamma\label{eq}
 
 
 \section{EXPERIMENT AND RESULTS ANALYSIS}
-duy viet 
-deadline: 2024-03-16
+To facilitate objective comparison with existing related work. We focus on utilizing a window of n days to forecast the highest price on day (n+1). To evaluate the models' capabilities in capturing both long-term and short-term dependencies in the stock price data, we conducted experiments by varying the value of n, which is commonly referred to as the "window of days." This methodological approach enables us to directly compare our findings with those of previous studies, ensuring the validity and reliability of our results.
 \subsection{Metrics}
+For measuring loss, we utilized the Mean Squared Error (MSE) loss function, given that predicting the highest price on day (n+1) is a regression-based task. MSE is calculated by computing the average of the squared differences between each data point's corresponding ground truth label and the model's predicted output. The mathematical formula for MSE loss is presented in Equation \ref{eq:mse} below:
+\begin{equation}
+\label{eq:mse}
+\text{MSE loss} = \frac{1}{N} \sum_{i=1}^{N} (\hat{y_i} - y_i)^2
+\end{equation}
+Mean Absolute Percentage Error (MAPE) serves as a crucial metric for evaluating the precision of forecasting methodologies. It entails calculating the average of the absolute percentage errors associated with each data point within a dataset. This metric quantifies the accuracy of forecasted values in relation to their corresponding actual values. MAPE proves particularly valuable when analyzing extensive datasets and necessitates the utilization of non-zero values within the dataset. 
+\begin{equation}
+\label{eq:mape}
+\text{MAPE} = \frac{1}{\text{N}} \sum_{i=1}^{\text{N}} \left( \frac{\left| {y}_i - \hat{y_i} \right|}{\left| {y}_i \right|} \right) \times 100
+\end{equation}
 \subsection{Best Run Parameters}
+In all our tests, the model was trained for 100 epochs. We opted for the Adam optimizer throughout due to its well-established reputation for achieving rapid convergence. Lastly, a learning rate of 0.0001 demonstrably gave the best convergence results across all trials.
 \subsection{Best Model Parameters}
-deadline: 2024-03-16 19h \\
-pic: duy 
+For our Stock Attention model, we utilized a combination of LSTM and attention mechanisms to effectively capture temporal dependencies in the data while focusing on relevant information. The model architecture consisted of 64 LSTM layers stacked on top of each other. To enhance generalization and prevent overfitting, we incorporated a dropout value of 0.1. Dropout randomly drops a fraction of input units during training, which encourages the model to learn more robust features and reduces reliance on specific inputs. This configuration allowed for a comprehensive understanding of the sequential patterns present in the stock data.
+
+We leveraged the power of attention mechanisms by employing 128 attention heads. Each attention head has its own set of weights, enabling the model to focus on different aspects of the input sequence simultaneously. This multi-head attention mechanism provides the model with a richer representation of contextual information, leading to more informed predictions.
+
+Additionally, Dense layers with 64 neurons each follow the attention layer. And finally utilize Leaky ReLU activation functions with a chosen alpha value of 0.4 for enhanced nonlinear transformation capabilities.
+
+We added a batch size of 16 to the training process. This means that during each training iteration, 16 samples from the dataset were processed simultaneously. Utilizing batch training helps improve computational efficiency and allows for parallel processing, which can speed up training time.
+
+By combining LSTM layers with attention mechanisms and carefully tuning hyperparameters such as the number of layers, hidden dimensions, dropout rate, and attention heads, our Stock Attention model achieved superior performance across various time windows, demonstrating its efficacy in capturing and leveraging temporal dynamics in stock data for accurate forecasting.
 \subsection{Experimental Results}
+As highlighted in the Related Works section, Paper A presents a baseline LSTM model for forecasting with a time window of 30 days. We commenced our investigation by replicating the architecture outlined in Paper A, utilizing a feature set encompassing solely Twitter interactions and price data (totaling 7 features). This initial configuration yielded a noteworthy improvement, achieving a Mean Absolute Percentage Error (MAPE) 4.5\% higher compared to the baseline established by the previous research.
+
+We then exploratory incorporated an additional feature – whale tracking data – into the model. While this inclusion did not lead to a further reduction in MAPE, the performance remained on par with the previous baseline ($\sim3.6\%$ MAPE).
+
+Undeterred, we explored the potential of a novel architecture – the Stock Attention model. This innovative approach yielded exceptional results, surpassing all prior research by achieving a remarkable MAPE of 2.1\% lower than the established benchmark.
+
 \subsection{Comparison price prediction between LSTM and Transformer}
-so sanh
-
-
 \begin{table}[htbp]
-\caption{Table Type Styles}
+\caption{Comparison between LSTM and Stock Attention}
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{cccccc}
 \hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
+\multicolumn{2}{c}{Model} & \multicolumn{4}{c}{Metric} \\ \cline{3-6}
+\multicolumn{2}{c}{} & MSE Loss & Directional Accuracy & MAPE & \\ \hline
+LSTM  & n=4  & 1.4360 & 0.5178 & 3.63\% &  \\
+      & n=14 & 7.2680 & 0.5353 & 5.93\% &  \\
+      & n=21 & 10.140  & 0.4444 & 6.90\% &  \\ \hline
+Stock Attention & n=4  & 1.2571 & 0.5555 & \textbf{2.30\%} &  \\
+      & n=14 & 2.5452 & \textbf{0.5965} & 4.69\% &  \\
+      & n=21 & 3.6659 & \textbf{0.6326} & 5.53\% &  \\ \hline
 \end{tabular}
 \label{tab1}
 \end{center}
 \end{table}
 
+
+
+To determine the most suitable model for cryptocurrency price prediction, we conducted a thorough analysis comparing the performance of the Stock Transformer and LSTM models. Our study employed three key metrics: Direction Accuracy, Mean Squared Error (MSE), and Mean Absolute Percentage Error (MAPE). Notably, this research represents an example of effort in exploring Transformer-based forecasting methodologies tailored for both short-term and long-term prediction horizons.
+
+In our experimentation, we achieved a directional accuracy of 55.6\%, slightly lower than the findings reported in previous works such as Paper A. However, our model showcased a substantially enhanced MAPE of only 2.3\%, significantly lower than the baseline of 3.6\% reported in research B, thereby indicating its effectiveness in precisely forecasting cryptocurrency price movements.
+
+Furthermore, our investigation uncovered intriguing insights regarding model performance over longer time windows, particularly with a lag period of 21 days. Here, we observed a notable discrepancy between the Stock Transformer and LSTM models, with the former outperforming the latter by 18\%. This disparity underscores the potential degradation in LSTM's predictive capabilities over extended forecasting horizons.
+
+Overall, our findings suggest that while LSTM models may demonstrate competitive performance in certain scenarios, the Stock Transformer exhibits promising potential, particularly for long-term cryptocurrency price prediction tasks. This study contributes valuable insights to the burgeoning field of Transformer-based forecasting techniques and underscores the importance of considering both short-term and long-term performance metrics in model evaluation.
+
+
+
+
+
+
+
 \begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
-\caption{Example of a figure caption.}
-\label{fig}
+\begin{center}
+
+
+\centering
+\includegraphics[width=0.5\textwidth]{mad.png} % Adjust width as needed
+\caption{Directional Accuracy Comparison}
+\label{fig:da_comparison}
+
+
+\end{center}
 \end{figure}
 
-Figure Labels: image description
 
 
 \section{CONCLUSION}
