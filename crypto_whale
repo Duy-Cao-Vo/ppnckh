@@ -52,15 +52,15 @@ deadline: 2024-03-16 19h \\
 pic: duy 
 
 \subsection{Architecture Descriptions}
-Our Stock Attention model employs a synergistic combination of LSTM and attention mechanisms. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
+Our Stock Attention model employs a synergistic combination of LSTM\citi{lstm} and attention mechanisms\citi{attention}. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
 \
 \subsubsection{Data Collection and Data Preprocessing}
 \
 In this paper, we address the problem of cryptocurrency price prediction by utilizing three main data sources. First, we consider Bitcoin price data. We collect a total of 2340 consecutive days of Bitcoin price changes from August 2017 to January 2024. Bitcoin price has always served as a benchmark and exerts a significant influence on the cryptocurrency market. Next, we incorporate features extracted from social media platform Twitter. These features include conversation volume, views, likes, and follows. Finally, a key differentiator of our Stock Attention model lies in the incorporation of features derived from whale behavior on transactions exceeding 100 Bitcoin. Large transaction volumes from whale wallets consistently lead to Bitcoin price fluctuations and consequently, impact the entire cryptocurrency market. 
 \
 
-For the quality issues of the dataset, we employed a proposed data augmentation method. Specifically, for the trading date feature, we converted timestamps and features from different sources into a unified data format using linear scaling normalization. This is a valuable data preprocessing step for machine learning models, as it offers several advantages: Improved model convergence, linear scaling ensures that all features are on the same scale, potentially leading to faster convergence during the training process. Enhanced accuracy to outliers, by normalizing the data, the influence of extreme values is reduced, making the model more robust and reliable. Facilitated model interpretability, when features are on the same scale, it becomes easier to understand the relative importance of each feature and how they contribute to the model's predictions.
-The basic idea of calculating a linear scale is to transform for each attribute value (x) in your data according to the following formula:
+For the quality issues of the dataset, we employed a proposed data augmentation method. Specifically, for the trading date feature, we converted timestamps and features from different sources into a unified data format using linear scaling normalization\citi{linerscale}. This is a valuable data preprocessing step for machine learning models, as it offers several advantages: Improved model convergence, linear scaling ensures that all features are on the same scale, potentially leading to faster convergence during the training process. Enhanced accuracy to outliers, by normalizing the data, the influence of extreme values is reduced, making the model more robust and reliable. Facilitated model interpretability, when features are on the same scale, it becomes easier to understand the relative importance of each feature and how they contribute to the model's predictions.
+The basic idea of calculating a linear scale\citi{linerscale} is to transform for each attribute value (x) in your data according to the following formula:
 
 \begin{equation}
 x_\text{scaled} = \frac{x - \min(X)}{\max(X) - \min(X)}
@@ -68,7 +68,7 @@ x_\text{scaled} = \frac{x - \min(X)}{\max(X) - \min(X)}
 
 Where x\_\text{scaled} is the scaled value property, x is the beginning of the specific value histogram, min(X) is the smallest value of all value properties in X, and max(X) is value Maximum of all specified values in X. This formula subtracts the minimum value from each feature value and then divides the result by the difference between the maximum value and the minimum value. This ensures that all scaled feature values will lie within the range of 0 to 1.
 
-\subsubsection{RNN}
+\subsubsection{Recurrent Neural Networks}
 \
 
 The recurrent neural network (RNN) proposed in 1986 \cite{backpropagating}, represents a dynamic system with recursive properties. Two key characteristics of RNNs include computing the current state as a synthesis of past states and parameter sharing. In general, the system can be described by the formula:
@@ -96,7 +96,7 @@ Recurrent Neural Networks (RNNs) can be considered deep learning networks when h
 \begin{center}
 \centering
 \includegraphics[width=0.5\textwidth]{RNN.png} % Adjust width as needed
-\caption{Directional Accuracy Comparison}
+\caption{Recurrent Neural Networks}
 \label{fig:da_comparison}
 
 \end{center}
@@ -113,7 +113,7 @@ The Long Short-Term Memory (LSTM) network, introduced by Hochreiter & Schmidhube
 
 \centering
 \includegraphics[width=0.5\textwidth]{LSTM.png} % Adjust width as needed
-\caption{Directional Accuracy Comparison}
+\caption{The Long Short-Term Memory Cell}
 \label{fig:da_comparison}
 
 \end{center}
@@ -235,16 +235,39 @@ deadline: 2024-03-23 duy viet mn review
 
 
 
+
 \begin{thebibliography}{00}
 \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+\bibitem{binanceapi}
+Binance API. \textit{Accessed: March 16, 2024.} Available online: \url{https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT}
+\bibitem{tokenview}
+TokenView.io API. \textit{Accessed: March 16, 2024.} Available online: \url{https://services.tokenview.io/vipapi/tx/unusual/amount/1/5}
+\bibitem{tweepy}
+Tweepy - Python library for accessing the Twitter API. \textit{Accessed: March 16, 2024.} Available online: \url{https://www.tweepy.org/}
+
+\bibitem{backpropagating} Rumelhart, David E, Hinton, Geoffrey E, and Williams, Ronald J. Learning representations by back-propagating errors. Nature, 323(6088):533–536, 1986.
+\bibitem{Eigenvalue} Ghojogh, Benyamin, Karray, Fakhri, and Crowley, Mark. Eigenvalue and generalized eigenvalue problems: Tuto- rial. arXiv preprint arXiv:1903.11240, 2019a.
+\bibitem{longdelay} Lin, Tsungnan, Horne, Bill G., Tino, Peter, and Giles, C. Lee. Learning long-term dependencies is not as difficult with narx recurrent neural networks. Advances in neural information processing systems, 1995.
+\bibitem{statenetwork} Jaeger, Herbert. Echo state network. Scholarpedia, 2(9): 2330, 2007.
+\bibitem{trainingrecurrent}  Jaeger, Herbert. Tutorial on training recurrent neural net- works, covering BPPT, RTRL, EKF and the ”echo state network” approach. 2002.
+\bibitem{kernel} Sutskever, Ilya and Hinton, Geoffrey. Temporal-kernel re- current neural networks. Neural Networks, 23(2):239– 243, 2010.
+\bibitem{lstm}  Hochreiter, Sepp and Schmidhuber, Ju ̈rgen. Long short- term memory. Neural computation, 9(8):1735–1780, 1997.
+\bibitem{lstm2}  Hochreiter, Sepp and Schmidhuber, Ju ̈rgen. Long short- term memory. Technical report, FKI-207-95, Depart- ment of Fakulta ̈t fu ̈r Informatik, Technical University of Munich, Munich, Germany, 1995.
+\bibitem{lstm3} Gers, Felix A, Schmidhuber, Ju ̈rgen, and Cummins, Fred. Learning to forget: Continual prediction with LSTM. Neural computation, 12(10):2451–2471, 2000.
+\bibitem{NN} Mike Schuster and Kuldip K. Paliwal. Bidirectional recurrent neural networks. Signal Processing, IEEE Transactions on, 45(11):2673–2681, 1997.
+\bibitem{NL} Marius Pachitariu and Maneesh Sahani. Regularization and nonlinearities for neural language models: when are they needed? arXiv preprint arXiv:1301.5650, 2013.
+\bibitem{recurrentnetworks} Justin Bayer, Christian Osendorfer, Daniela Korhammer, Nutan Chen, Sebastian Urban, and Patrickvander Smagt. On fast dropout and its applicability to recurrent networks. arXiv preprint arXiv:1311.0701, 2013.
+\bibitem{recurrentnetworks2} Vu Pham, Theodore Bluche, Christopher Kermorvant, and Jerome Louradour. Dropout improves recurrent neural networks for handwriting recognition. In ICFHR. IEEE, 2014.
+\bibitem{attention} Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin. Attention Is All You Need. arXiv:1706.03762 [cs.CL] 6 Dec 2017
+\bibitem{attention2} Sangyeon Kim, Myungjoo Kang. Financial series prediction using attention LSTM. arXiv:1902.10877, 2019
+\bibitem{alstm} Wang, J., Cui, Q., Sun, X., & et al. (2022). Asian stock markets closing index forecast based on secondary decomposition, multi-factor analysis and attention-based lstm model. Engineering Applications of Artificial Intelligence, 113, 104908. https://doi.org/10.1016/j.engappai.2022.1049082222
+\bibitem{linerscale}  Jason Brownlee. Data Preprocessing for Machine Learning
+\bibitem{sentimentanalysis}  Swathi, T., Kasiviswanath, N., & Rao, A. A. (2022). An optimal deep learning-based lstm for stock price prediction using twitter sentiment analysis. Applied Intelligence, 52(12), 13675–13688. https://doi.org/10.1007/s10489-022-03175-2
+
+
 \end{thebibliography}
 \vspace{12pt}
 
 
 \end{document}
+
