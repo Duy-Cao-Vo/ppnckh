@@ -2,6 +2,7 @@
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
+\usepackage{hyperref}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
@@ -11,8 +12,11 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{\textbf{Cryptocurrency Price Prediction using Twitter Interactions and Whale Tracking}\\
-    \author{\textbf{Cao-Duy Vo}$^{1}$, \textbf{Xuan-Hien Nguyen}$^{1}$\\
+\title{\textbf{Cryptocurrency Price Prediction Using Twitter Interactions, Whale Tracking and ALSTM}\\
+    \author{\textbf{Cao-Duy Vo}, \textbf{Xuan-Hien Nguyen},
+    \textbf{Thien-Vuong Pham}, \textbf{Phuc Ngo}
+    \textbf{}
+    \\
     $^{1}$ University of Science, VNU-HCM, Ho Chi Minh City, Vietnam \\
     $^{2}$ Vietnam National University, Ho Chi Minh City, Vietnam
     }
@@ -21,45 +25,241 @@
 \maketitle
 
 \begin{abstract}
-abstract \\
-deadline: t7 2024-03-17 sau khi mn nop \\
-pic: duy \\
+Cryptocurrency has emerged as a burgeoning investment avenue, currently boasting a market capitalization of 2.6 billion dollars. As investors seek reliable decision-making tools in this dynamic market, market makers leverage social media platforms to influence investor sentiment, while tracking whale movements provides valuable insights into market trends. However, traditional Recurrent Neural Networks encounter challenges such as gradient vanishing and loss of long-term dependencies with increasing sequence length. In contrast, Attention mechanisms have demonstrated superior performance in Natural Language Processing tasks, prompting our exploration into their effectiveness for accurate cryptocurrency trend prediction across short and long time windows. Through the incorporation of innovative features and the selection of appropriate architectural designs, our study achieves a Mean Absolute Percentage Error of 2.3\% in short-term predictions, surpassing existing benchmarks. Moreover, our model demonstrates a remarkable 68\% Directional Accuracy in long-term forecasting, highlighting its efficacy in capturing and forecasting cryptocurrency market trends.
+
+
+
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+Cryptocurrency, Machine Learning, Recurrent
+Neural Network, LSTM, Transformer, Self-Attention, Technical Analysis
+
 \end{IEEEkeywords}
 
 \section{Introduction}
-deadline: t7 2024-03-17 sau khi mn nop \\
-pic: duy
+At the onset of 2024, Bitcoin achieves a new all-time high (ATH), leading to a substantial influx of risk-taking capital into the realm of cryptocurrency investment. Consequently, tools that help make investment decisions are of high value, and the onset of new
+markets bolster their demand.
+
+Telegram and Twister emerge as key platforms for disseminating news and stoking investment frenzy. Leveraging technology to swiftly glean insights and proffer investment advisories in this dynamic market landscape becomes imperative. 
+
+There are numerous reasons for this volatility, lists 22 factors that may impact dynamically in the Bitcoin market. Google Trends, total circulation, consumer confidence, and the S\&P 500 index are a few of these variables mentioned \cite{bakas2022volatility}. Machine learning techniques based on sentiment tweets have not achieved very accurate results MAPE 3.6\% \cite{cryptopaper}. There have also been attempts at using more conventional methods of making predictions using past cryptocurrency price data. \cite{bayesian_bitcoin} doubled their investment over a 60-day period by using Bayesian regression. \cite{crypto_portfolio} managed a bitcoin portfolio that forecasted prices using deep reinforcement learning. None of these research use large transactions of Bitcoin wallet to predict short-term price movement. 
+
+In this study, we combine different datasets from three crawled sources. After data processing and analyzing, we investigate the feasibility of features including conversation ID, view count, reply count, retweet count, followers count, like count, BTC past price, and whale tracking. We investigate the feasibility of estimating the price of Bitcoin using parameters that are based on past prices, prevailing interactions, and a new proposed feature of whale tracking.
+
+Deep learning has demonstrated remarkable achievements in various fields such as computer vision, speech recognition, object detection, and natural language processing.\cite{lecun2015deep, qiao2022two, ding2023bnn} The question arises: are newly developed deep learning models suitable for the crypto market? Given the diverse scales and types of data in the crypto market, there is a need for a robust model capable of extracting patterns. Many studies apply new architecture like Stock Transformer \cite{stock_pred_paper} and ALSTM \cite{attention2} to predict stock price but still fewer papers apply to crypto price.
+
+Similar to previous forecasting studies, this paper's prediction task involves using technical and sentiment data from an n-day lag period to predict the (n+1) day's normalized highest price. We normalized each technical feature and label in our unique dataset to enable our model to focus on trend prediction rather than specific BTC pricing. Therefore, we aim to compare LSTM and ALSTM in both short-term (3 days) and long-term (14, 21 days) forecasting archive two corresponding results: 2.3\% MAPE and 68\% Directional Accuracy.
+
+Our model's performance improvement over conventional RNNs and LSTMs relies on two factors. Firstly, the incorporation of Attention layers enables the capturing of long-term price patterns and correlations among accumulated crypto assets through the beneficial features of self-attention \cite{attention}. Secondly, we leverage Whale Tracking for BTC Large Transactions, which provides insights into significant supply and demand fluctuations. Given the dominance of market players and potential price manipulation, it is essential to closely monitor cash flow. 
+
 
 \section{RELATED WORKS}
-viet code o day
+\subsection{LSTM}
+There are many RNN-based stock prediction methods that is used to predict stock trends
+by using technical data or sentiment data or a combination of both. However, in this paper,
+we focus on LSTM.
 
+Firstly, LSTM (Long Short-Term Memory) \cite{lstm} has long been used as an alternative to basic
+(RNN) Recurrent Neural Networks for time series prediction tasks with the main issue
+ is that RNNs can theoretically store recent information but existing learning algorithms
+  struggle with long time lags between inputs and desired outputs, these algorithms
+  are slow or impractical, offering no clear benefit over simpler networks.
+  
+ LSTM is a new RNN architecture designed to address the vanishing gradient problem
+ by introducing special units with "constant error carousels" that allow error to flow through the network for extended periods so then, it can learn complex patterns even with noisy data and long time lags (over 1000 steps). These units are controlled by gates that regulate information flow. The forget gate decides what information is remembered for
+future predictions, the input gate determines the importance of
+the input and the output gate uses information passed through
+the previous two gates to output the next hidden state of the
+model.
 
+\subsection{ALSTM}
+Jijie Wang et al. \cite{alstm} introduce ALSTM (The attention mechanism into the LSTM)
+model to improve the prediction performance of the proposed
+model to analyze and predict Asian stock markets closing index.
+The importance of input data is fully utilized to determine the weight
+assignment, attention layer is added in the long short-term memory model
+so as to increase the weights of effectiveness and improve the 
+prediction accuracy by at least 30\% compared to general long short-term memory. Which motivates us to adapt the architecture.
+
+\subsection{Twitter Sentiment Analysis}
+T. Swathi et al \cite{sentimentanalysis} proposed sentiment analysis of the social media data of
+stock prices help to predict future stock prices effectively. 
+The growth of the Internet and social networks enables clients to express
+their opinions and share their views on future stock processes.
+Besides, the LSTM model is applied to classify tweets into 
+positive and negative sentiments related to stock prices. They help investigate 
+how the tweets correlate with the nature of the stock market prices.
+
+\subsection{Crypto Price Analysis}
+There are many people doing research about the prediction
+of cryptocurrency. Greaves et al. \cite{crypto} is a proposed technique
+using Logistic Regression and SVM and analyzed using Graph
+to predict bitcoin price. Huisu Jang et al. \cite{crypto1} are concerned
+about a study on the modeling and prediction of Bitcoin with
+Bayesian Neural Network and giving some knowledge about
+Bitcoin. Edwin Sin et al.\cite{crypto2} provide the topic of Bitcoin price
+prediction using Ensemble of Neural Networks. 
+
+Chih-Hung et al. \cite{crypto3} are
+created a new forecasting framework for Bitcoin prices using LSTM,
+they proposed with two various LSTM models (conventional
+LSTM and LSTM with AR(2) model) with 208 records dataset,
+compared with MSE, RMSE, MAE, and MAPE. Fei Qian et
+al.
+
+Inspired by the methods explored in the previous research for Bitcoin prediction, our study takes a different approach. Here, we delve into the realm of cryptocurrency prediction, focusing on constructing a model using ALSTM. We chose this approach for its ability to capture long-term patterns effectively while maintaining simplicity to ensure faster training times compared to Stock Transform.
+  
 \section{PROPOSED METHOD}
-\subsection{Dataset Description and Analysis}
-The dataset comprises three distinct sources of information. The first source includes historical Bitcoin price data, sourced from the Binance API. This dataset encompasses four key attributes: open, high, low, and close prices. The second source includes Twitter posts associated with Bitcoin, procured via the Tweepy library in Python 3. These posts were obtained through the Twitter Stream API, granting access to publicly available tweets from January 1, 2018, to January 21, 2024. Briefly, the dataset encompasses 79,145 tweets and 5,343,843 retweets. We retained the entirety of the data without preprocessing to maximize sample size. This dataset comprises 16 columns, including information such as date, hashtags, and engagement metrics like view count, reply count, retweet count, and like count. For our study, we focused solely on features relevant to our research, namely conversation ID, view count, reply count, retweet count, followers count, and like count. The third data source entails Whale Tracking for BTC Large Transactions. We obtained this information through TokenView.io's API, capturing data on transactions involving over 100 and 1000 bitcoins daily. This dataset provides crucial insights into large-scale Bitcoin transactions, thereby enriching our analytical framework.
+\subsection{Dataset Description and Data Preprocessing}\label{subsec:dataset}
+The dataset comprises three distinct sources of information. 
+
+The first source includes historical Bitcoin price data, sourced from the Binance API\cite{binanceapi}. This dataset encompasses four key attributes: open, high, low, and close prices. 
+
+The second source includes Twitter posts associated with Bitcoin, procured via the Tweepy \cite{tweepy} library in Python 3. These posts were obtained through the Twitter Stream API, granting access to publicly available tweets from January 1, 2018, to January 21, 2024. 
+
+The third data source entails Whale Tracking for BTC Large Transactions. We obtained this information through TokenView.io's API\cite{tokenview}, capturing data on transactions involving over 100 and 1000 bitcoins daily. This dataset provides crucial insights into large-scale Bitcoin transactions, thereby enriching our analytical framework.
 
 Con no 1 table cho de hinh dung
 
+To address dataset quality issues, we applied a data augmentation method. Specifically, for the trading date feature, we standardized timestamps and features from various sources using linear scaling normalization \cite{linerscale}. This preprocessing step is valuable for machine learning models, offering several benefits: improved model convergence, enhanced accuracy to outliers, and facilitated model interpretability. Linear scaling ensures all features are on the same scale, potentially leading to faster convergence during training, and reducing the influence of extreme values for a more robust model, making it easier to understand each feature's relative importance in predictions.
+The basic idea of calculating a linear scale\cite{linerscale} is to transform each attribute value (x) in your data according to the following formula:
+\begin{equation}
+x_\text{scaled} = \frac{x - \min(X)}{\max(X) - \min(X)}
+\end{equation}
+
+Where x\_\text{scaled} is the scaled value property, x is the beginning of the specific value histogram, min(X) is the smallest value of all value properties in X, and max(X) is value Maximum of all specified values in X. This formula subtracts the minimum value from each feature value and then divides the result by the difference between the maximum value and the minimum value. This ensures that all scaled feature values will lie within the range of 0 to 1.
 
 \subsection{Architecture Descriptions}
-deadline: 2024-03-16 19h \\
-pic: vuong cxcdasdasdsacscx
-nho Vuong hoac Phuc ve giup cai Architecture
-\begin{itemize}
-\item doan 1
-\item doan 2
-\item doan 3
-\end{itemize}
+Our Stock Attention model employs a synergistic combination of LSTM \cite{lstm} and attention mechanisms \cite{attention}. This approach facilitates the effective extraction of temporal dependencies from the data while simultaneously focusing on the most pertinent information. Long Short-Term Memory (LSTM) networks and self-attention mechanisms are both powerful tools for handling sequential data like time series. LSTMs shine in capturing long-term dependencies, uncovering patterns that unfold over extended periods. However, they can struggle to pinpoint the most crucial elements within lengthy sequences. Self-attention bridges this gap by directly focusing on the relative importance of different sequence parts. It assigns weights to the input, allowing the model to prioritize the most informative sections for the specific task. This focus on relevant information is particularly valuable in time series forecasting, where identifying key turning points and patterns is essential for accurate predictions. By combining LSTMs with self-attention, we create powerful models that leverage both long-term dependency learning and the ability to focus on the most critical information within the sequence. This approach allows us to isolate the impact of the self-attention mechanism in our model by comparing its performance to an LSTM-based model as the time window for forecasting increases. This enables us to identify valuable trends in the effectiveness of both models across different time horizons.
+
+\subsubsection{Recurrent Neural Networks}
+\
+The recurrent neural network (RNN) proposed in 1986 \cite{backpropagating}, represents a dynamic system with recursive properties. Two key characteristics of RNNs include computing the current state as a synthesis of past states and parameter sharing. In general, the system can be described by the formula:
+
 \begin{equation}
-a+b=\gamma\label{eq}
+h_t = f_\theta(h_{t-1}, x_t)
 \end{equation}
+
+Considering the state \( h_t \) as a function dependent on \( f_0 \), the previous state \( h_{t-1} \), and a current input signal \( x_t \), the recurrent neural network (RNN) typically accepts a sequence of input signals \( x_t \) and returns results suitable for classification or regression tasks. Suppose the input, output, and state at time slot \( t \) are denoted by \( x_t \in \mathbb{R}^d \), \( y_t \in \mathbb{R}^q \), and \( h_t \in \mathbb{R}^p \), respectively. The computation of an RNN is specified as follows.
+
+\begin{equation}
+i_t = W h_{t-1} + U x_t + b_i \
+\end{equation}
+\begin{equation}
+h_t = \text{tanh}(i_t) 
+\end{equation}
+\begin{equation}
+= \text{tanh}(W h_{t-1} + U x_t + b_i)
+\end{equation}
+\begin{equation}
+y_t = V h_t + b_y 
+\end{equation}
+Recurrent Neural Networks (RNNs) can be considered deep learning networks when handling temporally extended signals, as illustrated in the figure below [2].
+\begin{figure}[htbp]
+\begin{center}
+\centering
+\includegraphics[width=0.3\textwidth]{RNN.png} % Adjust width as needed
+\caption{Recurrent Neural Networks}
+\label{fig:da_comparison}
+
+\end{center}
+\end{figure}
+Hence, the output results often comprise a composition of sequential nonlinear operations, leading to the issue of vanishing or exploding gradients in recurrent neural networks, hindering the capture of long-term dependencies. Various efforts have been made to address this challenge, notable examples include the Close-to-identity Weight Matrix \cite{Eigenvalue}, Long Delays \cite{longdelay}, Leaky Units \cite{statenetwork, kernel}, and Echo State Networks \cite{statenetwork, trainingrecurrent}.
+
+
+\subsubsection{Long Short-Term Memory (LSTM) Baseline}
+The Long Short-Term Memory (LSTM) network, introduced by Hochreiter \& Schmidhuber \cite{lstm,lstm2}, represents a significant advancement over traditional RNNs. It autonomously determines when to utilize long-term and short-term signals, eliminating the need for manual adjustments to the RNN cell's internal architecture. An LSTM cell comprises multiple gates for signal processing, which can be depicted as illustrated in the figure below.
+\begin{figure}[htbp]
+\begin{center}
+
+\centering
+\includegraphics[width=0.3\textwidth]{LSTM.png} % Adjust width as needed
+\caption{The Long Short-Term Memory Cell}
+\label{fig:da_comparison}
+
+\end{center}
+\end{figure}
+
+The input gate \cite{lstm}\cite{lstm2} accepts the current time slot input \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( i_t \in [0, 1]^p \):
+
+\begin{equation}
+i_t = \sigma(W_i h_{t-1} + U_i x_t + (p_i \odot c_{t-1}) + b_i)
+\end{equation}
+where \( W_i \in \mathbb{R}^{p \times p} \), \( U_i \in \mathbb{R}^{p \times d} \), and the bias \( b_i \in \mathbb{R}^p \) are the learnable weights for the input gate. The symbol \( \odot \) denotes the Hadamard (element-wise) product, \( c_{t-1} \in \mathbb{R}^p \) is the final memory of the previous time slot, and \( p_i \in \mathbb{R}^p \) is the learnable peephole weight \cite{lstm3} letting a possible leak of information from the previous final memory.
+
+The forget gate \cite{lstm3} takes the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( f_t \in [0, 1]^p \):
+
+\begin{equation}
+f_t = \sigma(W_f h_{t-1} + U_f x_t + (p_f \odot c_{t-1}) + b_f)
+\end{equation}
+
+where \( W_f \in \mathbb{R}^{p \times p} \), \( U_f \in \mathbb{R}^{p \times d} \), and the bias \( b_f \in \mathbb{R}^p \) are the learnable weights for the forget gate. Additionally, \( p_f \in \mathbb{R}^p \) represents the learnable peephole weight.
+
+The output gate accepts the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), producing the signal \( o_t \in [0, 1]^p \):
+\begin{equation}
+o_t = \sigma(W_o h_{t-1} + U_o x_t + (p_o \odot c_t) + b_o)
+\end{equation}
+
+Here, \( W_o \in \mathbb{R}^{p \times p} \), \( U_o \in \mathbb{R}^{p \times d} \), and the bias \( b_o \in \mathbb{R}^p \) are the learnable weights for the output gate. Additionally, \( p_o \in \mathbb{R}^p \) denotes the learnable peephole weight.
+
+The new memory cell, which captures the current input's new information, operates based on the input at the current time slot \( x_t \in \mathbb{R}^d \) and the hidden state from the previous time slot \( h_{t-1} \in [-1, 1]^p \), yielding the signal \( e_{ct} \in [-1, 1]^p \). This gate integrates the influence of both the input and the previous hidden state. Its formulation is as follows:
+
+\begin{equation}
+e_{ct} = \text{tanh}(W_c h_{t-1} + U_c x_t + b_c)
+\end{equation}
+
+Here, \( W_c \in \mathbb{R}^{p \times p} \), \( U_c \in \mathbb{R}^{p \times d} \), and \( b_c \) represent the learnable weights for the new memory cell.
+
+The final memory \( c_t \in \mathbb{R}^p \) is computed as follows:
+\begin{equation}
+c_t = (f_t \odot c_{t-1}) + (i_t \odot e_{ct})
+\end{equation}
+
+Here, \( c_{t-1} \in \mathbb{R}^p \) represents the final memory from the previous time slot.
+
+The hidden state \( h_t \in [-1, 1]^p \) can be computed using the final memory \( c_t \) and the output gate \( o_t \) as follows:
+\begin{equation}
+h_t = o_t \odot \text{tanh}(c_t)
+\end{equation}
+
+The output \( y_t \in \mathbb{R}^q \) is given by:
+\begin{equation}
+y_t = V h_t + b_y
+\end{equation}
+
+where \( V \in \mathbb{R}^{q \times p} \) and the bias \( b_y \in \mathbb{R}^q \) are the learnable weights for the output.
+
+The LSTM can also be combined with the Bidirectional architecture \cite{NN}, where each Bidirectional LSTM layer consists of two hidden layers receiving the same input and output signals. The key difference lies in their processing of data in opposite directions, making them highly suitable for tasks that benefit from information from both the past and the future (such as part-of-speech tagging). However, applying Bidirectional and LSTM is not appropriate for tasks with an online setting, as predicting the current result requires knowledge of future information.
+
+Furthermore, based on prior research \cite{NL} \cite{recurrentnetworks} \cite{recurrentnetworks2}, the dropout technique has been applied to connections feeding from the hidden layer to the output layer of LSTM cells, aiding in enhancing the performance of RNN models. These studies also indicate that employing dropouts with a large number of recurrent connections can lead to model instabilities, leaving them without regularization.
+
+
+
+\subsubsection{Attention Mechanism}
+
+The Attention mechanism\cite{attention} addresses the vanishing gradient problem inherent in traditional RNN and LSTM models when handling long sequences of information. This is achieved by assigning weights to each data point \( d_t \). In practice, this is performed automatically (referred to as self-attention) through matrix multiplication operations between matrix X and matrices Q, K, and V.
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+Here, \( Q \), \( K \), and \( V \) represent the query, key, and value matrices, respectively. \( d_k \) denotes the dimensionality of the key vectors. The softmax function is applied row-wise, and the division by \( \sqrt{d_k} \) is a scaling factor.
+\
+After the data has been processed through the LSTM network, the output is passed through an attention layer before proceeding to two dense layers. Stacking LSTM onto this attention layer is analogous to findings from the previous research\cite{attention2} and has yielded positive results.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=1\textwidth]{model_architecture.PNG} % Change 'example-image' to your image filename
+    \caption{ALSTM WorkFlow with Exchangeable Baseline LSTM Module}
+    \label{fig:wide}
+\end{figure*}
+
+
 
 
 \section{EXPERIMENT AND RESULTS ANALYSIS}
+From the three data sources we mentioned in section \ref{subsec:dataset}, we collect a total of 2270 consecutive days of Bitcoin price changes from January 2018 to January 2024.
+Briefly, the dataset encompasses 79,145 tweets and 5,343,843 retweets. We retained the entirety of the data without preprocessing to maximize sample size. This dataset comprises 16 columns, including information such as date, hashtags, and engagement metrics like view count, reply count, retweet count, and like count. For our study, we focused solely on features relevant to our research, namely conversation ID, view count, reply count, retweet count, followers count, like count, and 2 important features number transaction over 100 and 1000 BTC.
+
 To facilitate objective comparison with existing related work. We focus on utilizing a window of n days to forecast the highest price on day (n+1). To evaluate the models' capabilities in capturing both long-term and short-term dependencies in the stock price data, we conducted experiments by varying the value of n, which is commonly referred to as the "window of days." This methodological approach enables us to directly compare our findings with those of previous studies, ensuring the validity and reliability of our results.
 \subsection{Metrics}
 For measuring loss, we utilized the Mean Squared Error (MSE) loss function, given that predicting the highest price on day (n+1) is a regression-based task. MSE is calculated by computing the average of the squared differences between each data point's corresponding ground truth label and the model's predicted output. The mathematical formula for MSE loss is presented in Equation \ref{eq:mse} below:
@@ -142,19 +342,91 @@ Overall, our findings suggest that while LSTM models may demonstrate competitive
 
 
 \section{CONCLUSION}
-pic: duy
-deadline: 2024-03-23 duy viet mn review
+Base on the results of testing different architectures and experiences.
+When we compare the Stock Attention model and the typical LSTM models, it's clear that the Stock Attention model stands out, especially for long-term forecasts. Although regular LSTM models perform decently in certain cases, the Stock Attention model appears to be particularly promising, particularly for long-term predictions in the cryptocurrency domain. Our top-performing results, as measured by MAPE metrics, are seen with 3-day windows. However, for accurately predicting price trends and direction, the 21-day window proves most effective, aligning with findings from previous research.
 
+Overall, this study contributes to the evolving landscape of cryptocurrency price prediction methodologies, offering valuable insights and methodologies that pave the way for more accurate and reliable forecasting models. As the cryptocurrency market continues to evolve, the adoption of advanced deep learning techniques holds the promise of unlocking new avenues for predicting price movements, thereby empowering investors and stakeholders with actionable insights in this dynamic and rapidly changing environment.
 
 
 \begin{thebibliography}{00}
+
+\bibitem{bakas2022volatility} Dimitrios Bakas, Georgios Magkonis, Eun Young Oh, ``What drives volatility in Bitcoin market?,'' \textit{Finance Research Letters}, Volume 50, 2022, 103237, ISSN 1544-6123, \url{https://doi.org/10.1016/j.frl.2022.103237}.
+
+\bibitem{cryptopaper} Haritha GB, Sahana N. B, ``Cryptocurrency Price Prediction using Twitter Sentiment Analysis,'' \textit{Papers with Code}, Available online: \url{https://paperswithcode.com/paper/cryptocurrency-price-prediction-using-twitter}.
+
+
+\bibitem{lecun2015deep} Y. LeCun, Y. Bengio, and G. Hinton, ``Deep learning,'' \textit{Nature}, vol. 521, no. 7553, pp. 436–444, 2015.
+
+\bibitem{qiao2022two} Y. Qiao, M. Alnemari, and N. Bagherzadeh, ``A two-stage efficient 3-d CNN framework for EEG based emotion recognition,'' in \textit{2022 IEEE International Conference on Industrial Technology (ICIT)}. IEEE, 2022, pp. 1–8.
+
+\bibitem{ding2023bnn} A. Ding, Y. Qiao, and N. Bagherzadeh, ``BNN an ideal architecture for acceleration with resistive in memory computation,'' \textit{IEEE Transactions on Emerging Topics in Computing}, 2023.
+
+
+\bibitem{stock_pred_paper} H. Kaeley, Y. Qiao, and N. Bagherzadeh, "Support for Stock Trend Prediction Using Transformers and Sentiment Analysis" \textit{arXiv:2305.14368v1 [q-fin.ST]}, May 18, 2023. Available online: \url{https://paperswithcode.com/paper/support-for-stock-trend-prediction-using}.
+
+
+\bibitem{attention} Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin. Attention Is All You Need. arXiv:1706.03762 [cs.CL] 6 Dec 2017
+
+
+\bibitem{cryptotwitter} Navid Akhavan, Babak Naderi, Amin Salehi-Abari, and Chengyu Zhang, "Cryptocurrency Price Prediction using Twitter," 2018. [Online]. Available: \url{https://paperswithcode.com/paper/cryptocurrency-price-prediction-using-twitter}
+
+\bibitem{bayesian_bitcoin} D. Shah and K. Zhang, "Bayesian regression and Bitcoin," arXiv preprint arXiv:1410.1231v1, Oct. 2014. Available online: \url{https://arxiv.org/pdf/1410.1231v1.pdf}.
+
+\bibitem{crypto_portfolio} Z. Jiang and J. Liang, "Cryptocurrency Portfolio Management with Deep Reinforcement Learning," arXiv preprint arXiv:1612.01277v5, Dec. 2016. Available online: \url{https://arxiv.org/abs/1612.01277v5}.
+
+
+\bibitem{attention2} Sangyeon Kim, Myungjoo Kang. Financial series prediction using attention LSTM. arXiv:1902.10877, 2019.
+
+\bibitem{binanceapi}
+Binance API. \textit{Accessed: March 16, 2024.} Available online: \url{https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT}
+
+\bibitem{NN} Mike Schuster and Kuldip K. Paliwal. Bidirectional recurrent neural networks. Signal Processing, IEEE Transactions on, 45(11):2673–2681, 1997.
+
+\bibitem{crypto} A. Greaves and B. Au, “Using the bitcoin transaction graph to predict the price of bitcoin,” No Data, 2015
+
+\bibitem{crypto1} H. Jang and J. Lee, “An Empirical Study on Modeling and Prediction of Bitcoin Prices With Bayesian Neural Networks Based on Blockchain Information,” IEEE ACCESS, vol. 6, pp. 5427–5437, 2018.
+
+\bibitem{crypto2} E. Sin and L. Wang, “Bitcoin Price Prediction Using Ensembles of Neural Networks,” in 2017 13TH INTERNATIONAL CONFERENCE ON NATURAL COMPUTATION, FUZZY SYSTEMS AND KNOWLEDGE DISCOVERY (ICNC-FSKD), 2017, pp. 666–671.
+
+\bibitem{crypto3} C.-H. Wu, C.-C. Lu, Y.-F. Ma, and R.-S. Lu, “A New Forecasting Framework for Bitcoin Price with LSTM,” in 2018 IEEE International Conference on Data Mining Workshops (ICDMW), 2018, pp. 168–175
+
+\bibitem{Eigenvalue} Ghojogh, Benyamin, Karray, Fakhri, and Crowley, Mark. Eigenvalue and generalized eigenvalue problems: Tutorial. arXiv preprint arXiv:1903.11240, 2019a.
+
+\bibitem{backpropagating} Rumelhart, David E, Hinton, Geoffrey E, and Williams, Ronald J. Learning representations by back-propagating errors. Nature, 323(6088):533–536, 1986.
+
 \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+
+\bibitem{kernel} Sutskever, Ilya and Hinton, Geoffrey. Temporal-kernel recurrent neural networks. Neural Networks, 23(2):239– 243, 2010.
+
+\bibitem{lstm} Hochreiter, Sepp and Schmidhuber, Jürgen. Long short-term memory. Neural Computation, 9(8):1735–1780, 1997.
+
+\bibitem{lstm2} Hochreiter, Sepp and Schmidhuber, Jürgen. Long short-term memory. Technical report, FKI-207-95, Department of Fakultät für Informatik, Technical University of Munich, Munich, Germany, 1995.
+
+\bibitem{lstm3} Gers, Felix A, Schmidhuber, Jürgen, and Cummins, Fred. Learning to forget: Continual prediction with LSTM. Neural Computation, 12(10):2451–2471, 2000.
+
+\bibitem{linerscale} Jason Brownlee. Data Preparation for Machine Learning.
+
+\bibitem{longdelay} Lin, Tsungnan, Horne, Bill G., Tino, Peter, and Giles, C. Lee. Learning long-term dependencies is not as difficult with narx recurrent neural networks. Advances in neural information processing systems, 1995.
+
+\bibitem{alstm} Wang, J., Cui, Q., Sun, X., & et al. (2022). Asian stock markets closing index forecast based on secondary decomposition, multi-factor analysis and attention-based lstm model. Engineering Applications of Artificial Intelligence, 113, 104908. https://doi.org/10.1016/j.engappai.2022.1049082222
+
+\bibitem{recurrentnetworks} Justin Bayer, Christian Osendorfer, Daniela Korhammer, Nutan Chen, Sebastian Urban, and Patrickvander Smagt. On fast dropout and its applicability to recurrent networks. arXiv preprint arXiv:1311.0701, 2013.
+
+\bibitem{recurrentnetworks2} Vu Pham, Theodore Bluche, Christopher Kermorvant, and Jerome Louradour. Dropout improves recurrent neural networks for handwriting recognition. In ICFHR. IEEE, 2014.
+
+\bibitem{sentimentanalysis} Swathi, T., Kasiviswanath, N., & Rao, A. A. (2022). An optimal deep learning-based lstm for stock price prediction using Twitter sentiment analysis. Applied Intelligence, 52(12), 13675–13688. https://doi.org/10.1007/s10489-022-03175-2
+
+\bibitem{statenetwork} Jaeger, Herbert. Echo state network. Scholarpedia, 2(9): 2330, 2007.
+
+\bibitem{trainingrecurrent} Jaeger, Herbert. Tutorial on training recurrent neural networks, covering BPPT, RTRL, EKF and the ”echo state network” approach. 2002.
+
+\bibitem{tweepy} Tweepy - Python library for accessing the Twitter API. \textit{Accessed: March 16, 2024.} Available online: \url{https://www.tweepy.org/}
+
+\bibitem{tokenview} TokenView.io API. \textit{Accessed: March 16, 2024.} Available online: \url{https://services.tokenview.io/vipapi/tx/unusual/amount/1/5}
+
+
+
+
 \end{thebibliography}
 \vspace{12pt}
 
